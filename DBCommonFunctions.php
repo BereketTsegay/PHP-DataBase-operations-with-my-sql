@@ -11,6 +11,7 @@
 	   public $username;
 
 	   //class methods
+	   //class contructor
 	   public function __construct(){
 			//instantiate PDO obj;
 			try{
@@ -28,17 +29,19 @@
           
 		}
        //common data base fuctions
-	   //commen functions
+	   // a funtion for geting all datas of a given table
 		public function getAllData($t_name){
 			$sql="SELECT * FROM  {$t_name}" ;
 			$result=$this->tbquery($sql);
 			return $result;
 
 		}
+	   //get any tables fields information
 		public function getTableFields($t_name){
 			 $sql="show columns from  {$t_name}";
 			 return $this->tbquery($sql);
 		}
+	   //get all tables in a given database
 		public function getAllTables($db_Name = null){
 			if($db_Name=null) $db_Name=$this->db_name;
 			$sql="show tables from ".$this->db_name;
@@ -46,8 +49,9 @@
 
 			return  (array)$this->tbquery($sql);
 		}
-    public function findById($tbName = null,$id){
-			$sql="select * from {$tbName} where id='".$id."'";
+	   //search by a pk or given searching column
+    public function findById($tbName,$id){
+			$sql="select * from {$tbName} where id='".$id."'"; // "id" is the searching or primary Key searching key
 
 			return  (array)$this->find_Byquery($sql);
 		}
@@ -197,22 +201,7 @@
 			return false;
 		}
 	}//end of delete fuction.
-	public function query($sqlquery)
-   {
-	   try{
-			//take query to get a result.. the result is a type of statment
-			//$this->last_query=$sqlquery;//catch the last query ;
-			//self::$statment=self::$db->query($sqlquery);//excute the query;
-			//$row=self::$statment->fetch(PDO::FETCH_ASSOC);//get the reauslt using the fetchAll pdo class function;
-			//return $row;//return a set of out put;
-
-		}catch(PDOEXCETION $ex)
-		{
-		    echo "Authentification error :".$ex.getMessage();
-		}
-
-   }
-
+	 
 	//update
 	public function update($data,$pks){
 		global $database;
@@ -253,12 +242,7 @@
 	}
     
      public function generatePK(){
-       /*
-         1.access the file.
-         2.get the lastnumber.
-         3.change the number to integer.
-         4.attache with the string.
-       */
+       
        $sql="select id from generalpk order by timestamp DESC limit 1";
        $result=$this->find_Byquery($sql);
        $id=(int)$result['0']['id']+1;
